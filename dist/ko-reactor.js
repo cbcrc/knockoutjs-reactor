@@ -46,9 +46,7 @@
 
         if (targetType === 'boolean' || targetType === 'undefined') {
             // Turn on or off the watcher for the specified target along with any of its children.
-            ko.watch(this, {
-                enabled: targetOrCallback !== false
-            });
+            ko.watch(this, { enabled: targetOrCallback !== false });
         } else if (targetType === 'function' && !ko.isSubscribable(targetOrCallback)) {
             // Target the chained subscribable itself if no target subscribable or object was passed.
             ko.watch(this, options || {}, targetOrCallback, context || this);
@@ -167,7 +165,9 @@
                                         var type = Object.prototype.toString.call(sub);
                                         if (type !== '[object Function]' && type !== '[object Object]') {
                                             if (!options.beforeWrap || options.beforeWrap.call(context, parents, child, sub) !== false) {
-                                                sub = child[property] = type === '[object Array]' ? ko.observableArray(sub) : ko.observable(sub);
+                                                sub = child[property] = type === '[object Array]'
+                                                    ? ko.observableArray(sub)
+                                                    : ko.observable(sub);
                                             }
                                         }
                                     }
@@ -198,23 +198,13 @@
         // or the F, H or M fields when minified depending on the version used.
         var subscriptionsField;
         switch (ko.DEBUG || ko.version) {
-            case true:
-                subscriptionsField = '_subscriptions';
-                break;
-            case "3.0.0":
-                subscriptionsField = 'F';
-                break;
-            case "3.1.0":
-                subscriptionsField = 'H';
-                break;
-            case "3.2.0":
-                subscriptionsField = 'M';
-                break;
-            case "3.3.0":
-                subscriptionsField = 'G';
-                break;
-            default:
-                throw "Unsupported Knockout version. Only v3.0.0 to v3.3.0 are supported when minified. Current version is " + ko.version;
+            case true: subscriptionsField = '_subscriptions'; break;
+            case "3.0.0": subscriptionsField = 'F'; break;
+            case "3.1.0": subscriptionsField = 'H'; break;
+            case "3.2.0": subscriptionsField = 'M'; break;
+            case "3.3.0": subscriptionsField = 'G'; break;
+            case "3.4.0": subscriptionsField = 'K'; break;
+            default: throw "Unsupported Knockout version. Only v3.0.0 to v3.4.0 are supported when minified. Current version is " + ko.version;
         }
 
         function disposeWatcher(child) {
@@ -278,7 +268,9 @@
                     child.subscribe(function(oldValue) {
                         if (options.oldValues > 0) {
                             // Add old value to history list before every update.
-                            var values = (child['oldValues'] ? child['oldValues'] : child['oldValues'] = []);
+                            var values = (child['oldValues'] 
+			        ? child['oldValues']
+				: child['oldValues'] = []);
 
                             values.unshift(oldValue);
 
